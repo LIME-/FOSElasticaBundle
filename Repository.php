@@ -66,6 +66,17 @@ class Repository
     }
 
     /**
+     * @param mixed $query
+     * @param array $options
+     *
+     * @return \Pagerfanta\Pagerfanta
+     */
+    public function findPaginatedRaw($query)
+    {
+        return $this->finder->findPaginatedRaw($query);
+    }
+
+    /**
      * @param string $query
      * @param array  $options
      *

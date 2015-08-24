@@ -4,6 +4,7 @@ namespace FOS\ElasticaBundle\Finder;
 
 use Elastica\Document;
 use FOS\ElasticaBundle\Paginator\HybridPaginatorAdapter;
+use FOS\ElasticaBundle\Paginator\RawPaginatorAdapter;
 use FOS\ElasticaBundle\Transformer\ElasticaToModelTransformerInterface;
 use FOS\ElasticaBundle\Paginator\TransformedPaginatorAdapter;
 use FOS\ElasticaBundle\Paginator\FantaPaginatorAdapter;
@@ -116,6 +117,22 @@ class TransformedFinder implements PaginatedFinderInterface
     }
 
     /**
+     * Gets a paginator wrapping the result of a search.
+     *
+     * @param string $query
+     * @param array  $options
+     *
+     * @return Pagerfanta
+     */
+    public function findPaginatedRaw($query)
+    {
+        $queryObject = Query::create($query);
+        $paginatorAdapter = $this->createRawPaginatorAdapter($queryObject);
+
+        return new Pagerfanta(new FantaPaginatorAdapter($paginatorAdapter));
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function createPaginatorAdapter($query, $options = array())
@@ -133,5 +150,15 @@ class TransformedFinder implements PaginatedFinderInterface
         $query = Query::create($query);
 
         return new HybridPaginatorAdapter($this->searchable, $query, $this->transformer);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createRawPaginatorAdapter($query)
+    {
+        $query = Query::create($query);
+
+        return new RawPaginatorAdapter($this->searchable, $query);
     }
 }
