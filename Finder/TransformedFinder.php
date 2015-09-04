@@ -11,6 +11,8 @@ use FOS\ElasticaBundle\Paginator\FantaPaginatorAdapter;
 use Pagerfanta\Pagerfanta;
 use Elastica\SearchableInterface;
 use Elastica\Query;
+use Elastica\ResultSet;
+use Elastica\Result;
 
 /**
  * Finds elastica documents and map them to persisted objects.
@@ -47,6 +49,16 @@ class TransformedFinder implements PaginatedFinderInterface
         $results = $this->search($query, $limit, $options);
 
         return $this->transformer->hybridTransform($results);
+    }
+
+    public function findRaw($query, $limit = null, $options = array())
+    {
+        $results = $this->search($query, $limit, $options);
+
+        return array_map(function (Result $result) {
+            $res = $result->getSourceWithInnerHits();
+            return $res;
+        }, $results);
     }
 
     /**

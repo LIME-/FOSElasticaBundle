@@ -45,6 +45,18 @@ class Repository
 
     /**
      * @param mixed $query
+     * @param integer $limit
+     * @param array $options
+     *
+     * @return mixed
+     */
+    public function findRaw($query, $limit = null, $options = array())
+    {
+        return $this->finder->findRaw($query, $limit, $options);
+    }
+
+    /**
+     * @param mixed $query
      * @param array $options
      *
      * @return \Pagerfanta\Pagerfanta
